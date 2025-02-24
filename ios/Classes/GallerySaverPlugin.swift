@@ -12,8 +12,24 @@ public class GallerySaverPlugin: NSObject, FlutterPlugin {
     switch call.method {
     case "getPlatformVersion":
       result("iOS " + UIDevice.current.systemVersion)
+    case "toGallery":
+      toGallery(call: call, result: result)
     default:
       result(FlutterMethodNotImplemented)
     }
   }
+    
+    private func toGallery(call: FlutterMethodCall, result: @escaping FlutterResult){
+      let map = call.arguments as! Dictionary<String,String>
+//        print(map)
+        let url = map["path"]
+        if let image = UIImage(contentsOfFile: url!) {
+                       UIImageWriteToSavedPhotosAlbum(image, self, #selector(didFinishSavingImage(image:error:contextInfo:)), nil)
+                   }
+        result(nil)
+    }
+    
+    @objc func didFinishSavingImage(image: UIImage, error: NSError?, contextInfo: UnsafeMutableRawPointer?) {
+//           saveResult(isSuccess: error == nil, error: error?.description)
+       }
 }
